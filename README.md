@@ -1,6 +1,10 @@
-# 🚨 Remix: Interpol Thai Immigration Dashboard
+# 🚨 Interpol SLTD & Border Control Command Terminal
 
-> **A full-stack, enterprise-grade tactical security and border surveillance terminal.** Styled with a high-contrast, retro-modern Windows XP Luna *"Interpol Command Center Theme"* to manage wanted fugitives, cross-border entries, secure communications, and compliance audits in real-time.
+[![GitHub Repository](https://img.shields.io/badge/GitHub-boltnw662%2FSLTD--DASHBORD-amber?style=flat&logo=github&logoColor=white)](https://github.com/boltnw662/SLTD-DASHBORD)
+[![Database](https://img.shields.io/badge/Database-Interpol--SLTD-blue?style=flat&logo=database)](https://github.com/boltnw662/SLTD-DASHBORD)
+[![Security Class](https://img.shields.io/badge/Security-NCB--Bangkok--RESTRICTED-red?style=flat)](https://github.com/boltnw662/SLTD-DASHBORD)
+
+> **A full-stack, enterprise-grade tactical security and border surveillance terminal.** Purpose-built to integrate and interface with Interpol's **SLTD (Stolen and Lost Travel Documents)** database and **Red Notices directory**. Styled with a high-contrast, retro-modern Windows XP Luna *"NCB Interpol Command Center Theme"* to manage wanted fugitives, validate suspicious passports, coordinate secure joint agency communications, and compile automated compliance audits in real-time.
 
 ---
 
@@ -9,7 +13,8 @@
 The interface blends nostalgia with modern law-enforcement telemetry:
 * **The "Tactical Command" Theme**: Deep space slate canvases, sharp contrast neon-amber status indicators, high-density telemetry displays, and traditional XP-style window navigation chrome.
 * **Pixel-Perfect Windows Classic UI**: Retro window controls, double-borders, navigation bars (File, Edit, View...), and classic taskbars rebuilt cleanly using **Tailwind CSS**.
-* **Responsive Command Grid**: Stretched responsive fluid grids to ensure maximum density of operational data on desktop monitors, with scroll-friendly fallback zones on mobile devices.
+* **Responsive Drag & Drop Workspace Grid**: Modular windows that can be dynamically dragged and reordered by their title bars to reorganize grid columns, with an instantaneous layout memory reset fallback.
+* **Responsive Layout**: Fluid grids to ensure maximum density of operational data on desktop monitors, with scroll-friendly fallback zones on mobile devices.
 
 ---
 

@@ -11,7 +11,7 @@ import SystemAudit from "./components/SystemAudit";
 import { 
   Shield, Eye, ShieldCheck, Database, RefreshCw, FileText, HelpCircle, 
   Power, Globe, Terminal, MapPin, Scan, MessageSquare, Monitor, 
-  Trash2, HelpCircle as HelpIcon, Search, Folder, ShieldAlert, AlertCircle, RefreshCw as Spinner, Wifi 
+  Trash2, HelpCircle as HelpIcon, Search, Folder, ShieldAlert, AlertCircle, RefreshCw as Spinner, Wifi, Github 
 } from "lucide-react";
 
 // Preset Red Notices
@@ -767,6 +767,22 @@ export default function App() {
               System Audit
             </span>
           </div>
+
+          {/* SLTD GitHub Repository Link */}
+          <a 
+            href="https://github.com/boltnw662/SLTD-DASHBORD"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-[74px] shrink-0 flex flex-col items-center text-center cursor-pointer group rounded-sm p-1 border border-transparent hover:bg-white/15 hover:border-white/20 transition-all"
+            title="Open SLTD-DASHBORD Source Code on GitHub"
+          >
+            <div className="p-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+              <Github className="w-8 h-8 text-amber-400 shrink-0" />
+            </div>
+            <span className="text-[10px] text-white font-sans font-medium tracking-wide mt-1 aero-text-glow-dark text-center leading-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+              GitHub Repo
+            </span>
+          </a>
         </div>
 
         {/* MAIN APPLICATION STAGE WINDOWS GRID */}
@@ -779,14 +795,26 @@ export default function App() {
                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shrink-0" />
                 <span>JOINT STATION OPERATIONS: <span className="text-amber-500 font-bold">DRAG AND DROP TITLE BARS TO REORGANIZE WORKSPACE GRID</span></span>
               </div>
-              <button 
-                onClick={resetWindowOrder}
-                className="xp-btn border-[#1e293b] bg-[#090d16] hover:bg-[#1e293b] text-sky-400 hover:text-sky-300 font-sans font-bold px-3 py-1 cursor-pointer tracking-wider flex items-center gap-1.5 text-[9.5px] transition-colors"
-                title="Restore default window arrangement"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                RESET WORKSPACE LAYOUT
-              </button>
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://github.com/boltnw662/SLTD-DASHBORD"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="xp-btn border-[#1e293b] bg-[#090d16] hover:bg-[#1e293b] text-amber-400 hover:text-amber-300 font-sans font-bold px-3 py-1 cursor-pointer tracking-wider flex items-center gap-1.5 text-[9.5px] transition-colors"
+                  title="Visit SLTD-DASHBORD source code on GitHub"
+                >
+                  <Github className="w-3.5 h-3.5" />
+                  SLTD-DASHBORD GITHUB
+                </a>
+                <button 
+                  onClick={resetWindowOrder}
+                  className="xp-btn border-[#1e293b] bg-[#090d16] hover:bg-[#1e293b] text-sky-400 hover:text-sky-300 font-sans font-bold px-3 py-1 cursor-pointer tracking-wider flex items-center gap-1.5 text-[9.5px] transition-colors"
+                  title="Restore default window arrangement"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  RESET WORKSPACE LAYOUT
+                </button>
+              </div>
             </div>
 
             {/* Reorderable Windows Grid */}
@@ -1288,6 +1316,14 @@ export default function App() {
                   <div className="hover:text-[#38bdf8] hover:underline cursor-pointer" onClick={() => navigateToComponent("scanner-window")}>▶ Tactical Grid Map</div>
                   <div className="hover:text-[#38bdf8] hover:underline cursor-pointer" onClick={() => navigateToComponent("chat-window")}>▶ Device Diagnostics</div>
                   <div className="hover:text-[#38bdf8] hover:underline cursor-pointer" onClick={() => setHelpOpen(true)}>▶ Secure Manual</div>
+                  <a 
+                    href="https://github.com/boltnw662/SLTD-DASHBORD" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="block hover:text-amber-400 hover:underline cursor-pointer text-amber-500/90 font-bold"
+                  >
+                    ▶ GitHub Source
+                  </a>
                 </div>
               </div>
  

@@ -1,6 +1,6 @@
 {
-  "name": "Remix: Interpol Thai Immigration Dashboard",
-  "description": "Secure Interpol Command Center UI demonstrating connection and case coordination with the Royal Thai Police Immigration Bureau and automated agent analysis.",
+  "name": "Interpol SLTD Passport & Border Control Dashboard",
+  "description": "Secure Interpol SLTD (Stolen and Lost Travel Documents) and Red Notice Command Center UI integrated with the boltnw662/SLTD-DASHBORD repository, Royal Thai Police Bureau, and Gemini AI analysis.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
