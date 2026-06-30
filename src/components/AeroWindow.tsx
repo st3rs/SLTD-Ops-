@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { 
   ArrowLeft, ArrowRight, RotateCw, Search, Folder, ShieldCheck, 
-  ChevronRight, Minimize2, Square, X, ExternalLink, RefreshCw 
+  ChevronRight, Minimize2, Square, X, ExternalLink, RefreshCw, GripVertical 
 } from "lucide-react";
 
 interface AeroWindowProps {
@@ -21,6 +21,12 @@ interface AeroWindowProps {
   searchPlaceholder?: string;
   onSearchChange?: (val: string) => void;
   searchValue?: string;
+  draggable?: boolean;
+  onDragStart?: (e: React.DragEvent) => void;
+  onDragEnd?: (e: React.DragEvent) => void;
+  onDragOver?: (e: React.DragEvent) => void;
+  onDrop?: (e: React.DragEvent) => void;
+  onDragLeave?: (e: React.DragEvent) => void;
 }
 
 export default function AeroWindow({
@@ -36,6 +42,12 @@ export default function AeroWindow({
   searchPlaceholder,
   onSearchChange,
   searchValue = "",
+  draggable,
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDrop,
+  onDragLeave,
 }: AeroWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -59,15 +71,28 @@ export default function AeroWindow({
 
   return (
     <div 
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
       className={`flex flex-col xp-window transition-all duration-300 select-none ${
         isMaximized ? "fixed inset-0 z-40 p-[3px] rounded-none border-none" : `p-[3px] ${className}`
       }`}
     >
       {/* Windows XP Blue Titlebar Header */}
-      <div className="xp-window-titlebar flex items-center justify-between px-2.5 py-1.5 select-none rounded-t-[4px] h-[30px] shrink-0">
+      <div className={`xp-window-titlebar flex items-center justify-between px-2.5 py-1.5 select-none rounded-t-[4px] h-[30px] shrink-0 ${
+        draggable ? "cursor-grab active:cursor-grabbing" : ""
+      }`}>
         
         {/* Title & Icon */}
         <div className="flex items-center gap-1.5 z-10">
+          {draggable && (
+            <span className="text-white/40 hover:text-white/80 cursor-grab active:cursor-grabbing mr-0.5" title="Drag to reorder workspace">
+              <GripVertical className="w-3.5 h-3.5" />
+            </span>
+          )}
           {icon && <span className="text-white scale-90 drop-shadow-[1px_1px_1px_rgba(0,0,0,0.5)]">{icon}</span>}
           <span className="font-sans text-[11.5px] font-bold text-white tracking-wide truncate">
             {title}

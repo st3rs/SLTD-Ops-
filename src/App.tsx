@@ -225,6 +225,65 @@ export default function App() {
   // Immersive Shut Down Easter Egg States: "ACTIVE" | "LOGGING_OFF" | "SHUTDOWN" | "OFF"
   const [shutdownState, setShutdownState] = useState<"ACTIVE" | "LOGGING_OFF" | "SHUTDOWN" | "OFF">("ACTIVE");
 
+  // Reorderable workspace windows states
+  const DEFAULT_WINDOW_ORDER = ["red-notice", "watchlist", "checkpoints", "chat", "logs", "audit"];
+  const [windowOrder, setWindowOrder] = useState<string[]>(DEFAULT_WINDOW_ORDER);
+  const [draggedWindowId, setDraggedWindowId] = useState<string | null>(null);
+  const [dragOverWindowId, setDragOverWindowId] = useState<string | null>(null);
+
+  const resetWindowOrder = () => {
+    setWindowOrder(DEFAULT_WINDOW_ORDER);
+    setDragOverWindowId(null);
+  };
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    const target = e.target as HTMLElement;
+    const isTitlebar = target.closest(".xp-window-titlebar");
+    if (!isTitlebar) {
+      e.preventDefault();
+      return;
+    }
+    setDraggedWindowId(id);
+    e.dataTransfer.setData("text/plain", id);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    if (draggedWindowId !== id) {
+      setDragOverWindowId(id);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverWindowId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    const sourceId = e.dataTransfer.getData("text/plain") || draggedWindowId;
+    if (sourceId && sourceId !== targetId) {
+      setWindowOrder((prev) => {
+        const sourceIndex = prev.indexOf(sourceId);
+        const targetIndex = prev.indexOf(targetId);
+        if (sourceIndex !== -1 && targetIndex !== -1) {
+          const newOrder = [...prev];
+          newOrder[sourceIndex] = targetId;
+          newOrder[targetIndex] = sourceId;
+          return newOrder;
+        }
+        return prev;
+      });
+    }
+    setDraggedWindowId(null);
+    setDragOverWindowId(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedWindowId(null);
+    setDragOverWindowId(null);
+  };
+
   useEffect(() => {
     // Tick current time formatted exactly like Windows 7 Tray
     const updateTime = () => {
@@ -712,172 +771,297 @@ export default function App() {
 
         {/* MAIN APPLICATION STAGE WINDOWS GRID */}
         {!showDesktop ? (
-          <div className="max-w-[1550px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pl-0 md:pl-24 transition-all">
+          <div className="max-w-[1550px] w-full mx-auto flex flex-col gap-4 pl-0 md:pl-24 transition-all">
             
-            {/* WINDOW 1: Red Notice Directory (Col Span: 4) */}
-            <div id="red-notice-window" className="lg:col-span-4 lg:h-[800px] min-h-[500px] flex flex-col scroll-mt-4">
-              <AeroWindow
-                title="Red Notice Directory - C:\RTP_NCB\Fugitives"
-                path="C:\RTP_NCB\RedNotices"
-                icon={<Shield className="w-4 h-4 text-rose-600" />}
-                statusText={`${redNotices.length} criminal files loaded`}
-              >
-                <RedNoticeList
-                  redNotices={redNotices}
-                  selectedNotice={selectedNotice}
-                  onSelectNotice={setSelectedNotice}
-                  onAddCustomNotice={handleAddCustomNotice}
-                  onTriggerAnalysis={handleTriggerAnalysis}
-                  analysisLoading={analysisLoading}
-                  analysisReport={analysisReport}
-                />
-              </AeroWindow>
-            </div>
-
-            {/* WINDOW 2: Global Watchlist Hub (Col Span: 4) */}
-            <div id="watchlist-window" className="lg:col-span-4 lg:h-[800px] min-h-[500px] flex flex-col scroll-mt-4">
-              <AeroWindow
-                title="Global Watchlist Hub - C:\Watchlist"
-                path="C:\Immigration\GlobalWatchlist"
-                icon={<Globe className="w-4 h-4 text-sky-600" />}
-                statusText="Synchronized with Lyon databases"
-              >
-                <GlobalWatchlist
-                  onImportToRedNotices={handleImportToRedNotices}
-                  onSimulatePassportScan={handleSimulatePassportScan}
-                />
-              </AeroWindow>
-            </div>
-
-            {/* WINDOW 3: Tactical Border Controls live Matrix & Passport Scanner (Col Span: 4) */}
-            <div className="lg:col-span-4 space-y-5">
-              
-              <div id="map-window" className="scroll-mt-4">
-                <AeroWindow
-                  title="Border Checkpoints live Map - C:\LiveMap"
-                  path="C:\Immigration\Command\BorderMap"
-                  icon={<MapPin className="w-4 h-4 text-orange-500" />}
-                  statusText={`${checkpoints.length} Live Checkpoints Online`}
-                >
-                  <TacticalMap
-                    checkpoints={checkpoints}
-                    selectedCheckpoint={selectedCheckpoint}
-                    onSelectCheckpoint={setSelectedCheckpoint}
-                  />
-                </AeroWindow>
+            {/* Workspace Control Ribbon */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-slate-900/95 backdrop-blur-md border border-[#1e293b] px-3.5 py-2.5 text-white/95 font-mono text-[10px] uppercase tracking-wide select-none shadow-md">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shrink-0" />
+                <span>JOINT STATION OPERATIONS: <span className="text-amber-500 font-bold">DRAG AND DROP TITLE BARS TO REORGANIZE WORKSPACE GRID</span></span>
               </div>
-
-              <div id="scanner-window" className="scroll-mt-4">
-                <AeroWindow
-                  title="Biometric Passport Scanner - C:\Biometrics"
-                  path="C:\Immigration\Devices\PassportScanner"
-                  icon={<Scan className="w-4 h-4 text-emerald-600" />}
-                  statusText="APPS Device Driver v7.1 Ready"
-                >
-                  <PassportScanner
-                    onScanComplete={handleScanResult}
-                    activeRedNotices={redNotices}
-                  />
-                </AeroWindow>
-              </div>
-
-            </div>
-
-            {/* WINDOW 4: Secure Communications Chat (Col Span: 4) */}
-            <div id="chat-window" className="lg:col-span-4 lg:h-[480px] min-h-[420px] flex flex-col scroll-mt-4">
-              <AeroWindow
-                title="Joint NCB Operations Chat Terminal - C:\NCB_Chat"
-                path="C:\RTP_NCB\Communications"
-                icon={<MessageSquare className="w-4 h-4 text-indigo-500" />}
-                statusText="AES-256 Secure Channel"
+              <button 
+                onClick={resetWindowOrder}
+                className="xp-btn border-[#1e293b] bg-[#090d16] hover:bg-[#1e293b] text-sky-400 hover:text-sky-300 font-sans font-bold px-3 py-1 cursor-pointer tracking-wider flex items-center gap-1.5 text-[9.5px] transition-colors"
+                title="Restore default window arrangement"
               >
-                <ImmigrationChat
-                  chatHistory={chatHistory}
-                  onSendMessage={handleSendMessage}
-                  loading={chatLoading}
-                  activeSuspect={selectedNotice}
-                />
-              </AeroWindow>
+                <RefreshCw className="w-3.5 h-3.5" />
+                RESET WORKSPACE LAYOUT
+              </button>
             </div>
 
-            {/* WINDOW 5: National Checkpoint Stream Logs (Col Span: 8) */}
-            <div id="logs-window" className="lg:col-span-8 lg:h-[480px] min-h-[280px] flex flex-col scroll-mt-4">
-              <AeroWindow
-                title="Passenger Immigration Logs (Stream)"
-                path="C:\Immigration\SecurityLogs"
-                icon={<Terminal className="w-4 h-4 text-slate-700" />}
-                statusText="Real-time Stream Active"
-              >
-                <LiveFeed logs={logs} />
-              </AeroWindow>
-            </div>
-
-            {/* WINDOW 7: System Compliance Audit Specialist (Col Span: 12) */}
-            <div id="audit-window" className="col-span-12 lg:h-[620px] min-h-[450px] flex flex-col scroll-mt-4">
-              <AeroWindow
-                title="System Compliance Audit Center"
-                path="C:\Immigration\Audit"
-                icon={<FileText className="w-4 h-4 text-violet-600" />}
-                statusText="RTP Compliance Specialist Online"
-              >
-                <SystemAudit 
-                  logs={logs} 
-                  onAddSystemMessage={(text) => {
-                    setChatHistory((prev) => [...prev, {
-                      id: Math.random().toString(),
-                      sender: "SYSTEM",
-                      text,
-                      timestamp: new Date().toLocaleTimeString()
-                    }]);
-                  }}
-                />
-              </AeroWindow>
-            </div>
-
-            {/* WINDOW 6: Intelligence dossier (Row span: 12, triggers on compiles) */}
-            {analysisReport && (
-              <div id="dossier-window" className="col-span-12 min-h-[450px] flex flex-col scroll-mt-4">
-                <AeroWindow
-                  title="RTP Joint Intelligence Advisory Dossier"
-                  path="C:\RTP_NCB\Intelligence\Dossiers"
-                  icon={<FileText className="w-4 h-4 text-rose-600" />}
-                  statusText="Classified Law Enforcement Document"
-                  onClose={() => setAnalysisReport(null)}
-                >
-                  <div className="bg-[#f0f3f6] p-4 flex flex-col justify-between h-full font-sans text-slate-800">
-                    <div className="flex items-center justify-between border-b border-[#d2d2d2] pb-2.5 mb-3">
-                      <div className="flex items-center gap-1.5">
-                        <FileText className="w-4 h-4 text-rose-600 animate-pulse" />
-                        <div>
-                          <h3 className="font-sans text-xs font-bold text-sky-950 uppercase">
-                            JOINT COUNTER-MEASURES ADVISORY DOSSIER
-                          </h3>
-                          <p className="text-[10px] font-mono text-slate-400 font-bold uppercase">
-                            SOURCE COGNITION CORE: <span className="text-sky-700 font-bold">{analysisSource || "Gemini Intel Core"}</span>
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => setAnalysisReport(null)}
-                        className="win7-btn text-[10px] px-2.5 py-1 font-sans font-bold cursor-pointer"
+            {/* Reorderable Windows Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              {windowOrder.map((id) => {
+                if (id === "red-notice") {
+                  return (
+                    <div 
+                      key="red-notice"
+                      id="red-notice-window" 
+                      className={`lg:col-span-4 lg:h-[800px] min-h-[500px] flex flex-col scroll-mt-4 transition-all duration-300 ${
+                        dragOverWindowId === "red-notice" 
+                          ? "ring-2 ring-dashed ring-amber-400 bg-amber-500/10 scale-[0.99] opacity-75 shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
+                          : ""
+                      }`}
+                      onDragOver={(e) => handleDragOver(e, "red-notice")}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, "red-notice")}
+                    >
+                      <AeroWindow
+                        title="Red Notice Directory - C:\RTP_NCB\Fugitives"
+                        path="C:\RTP_NCB\RedNotices"
+                        icon={<Shield className="w-4 h-4 text-rose-600" />}
+                        statusText={`${redNotices.length} criminal files loaded`}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, "red-notice")}
+                        onDragEnd={handleDragEnd}
                       >
-                        Close Dossier
-                      </button>
+                        <RedNoticeList
+                          redNotices={redNotices}
+                          selectedNotice={selectedNotice}
+                          onSelectNotice={setSelectedNotice}
+                          onAddCustomNotice={handleAddCustomNotice}
+                          onTriggerAnalysis={handleTriggerAnalysis}
+                          analysisLoading={analysisLoading}
+                          analysisReport={analysisReport}
+                        />
+                      </AeroWindow>
                     </div>
+                  );
+                }
 
-                    <div className="bg-white border border-[#c8cbd1] rounded-sm p-4 text-xs font-mono leading-relaxed text-slate-700 max-h-[350px] overflow-y-auto shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)] whitespace-pre-wrap">
-                      {analysisReport}
+                if (id === "watchlist") {
+                  return (
+                    <div 
+                      key="watchlist"
+                      id="watchlist-window" 
+                      className={`lg:col-span-4 lg:h-[800px] min-h-[500px] flex flex-col scroll-mt-4 transition-all duration-300 ${
+                        dragOverWindowId === "watchlist" 
+                          ? "ring-2 ring-dashed ring-amber-400 bg-amber-500/10 scale-[0.99] opacity-75 shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
+                          : ""
+                      }`}
+                      onDragOver={(e) => handleDragOver(e, "watchlist")}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, "watchlist")}
+                    >
+                      <AeroWindow
+                        title="Global Watchlist Hub - C:\Watchlist"
+                        path="C:\Immigration\GlobalWatchlist"
+                        icon={<Globe className="w-4 h-4 text-sky-600" />}
+                        statusText="Synchronized with Lyon databases"
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, "watchlist")}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <GlobalWatchlist
+                          onImportToRedNotices={handleImportToRedNotices}
+                          onSimulatePassportScan={handleSimulatePassportScan}
+                        />
+                      </AeroWindow>
                     </div>
+                  );
+                }
 
-                    <div className="mt-3 text-right">
-                      <span className="text-[9px] font-mono text-slate-400 font-bold uppercase">
-                        CLASSIFIED MATERIAL • OFFICIAL USE ONLY • ROYAL THAI POLICE SPECIAL LIAISON BRANCH
-                      </span>
+                if (id === "checkpoints") {
+                  return (
+                    <div 
+                      key="checkpoints"
+                      className={`lg:col-span-4 space-y-5 transition-all duration-300 ${
+                        dragOverWindowId === "checkpoints" 
+                          ? "ring-2 ring-dashed ring-amber-400 bg-amber-500/10 scale-[0.99] opacity-75 shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
+                          : ""
+                      }`}
+                      onDragOver={(e) => handleDragOver(e, "checkpoints")}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, "checkpoints")}
+                    >
+                      <div id="map-window" className="scroll-mt-4">
+                        <AeroWindow
+                          title="Border Checkpoints live Map - C:\LiveMap"
+                          path="C:\Immigration\Command\BorderMap"
+                          icon={<MapPin className="w-4 h-4 text-orange-500" />}
+                          statusText={`${checkpoints.length} Live Checkpoints Online`}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, "checkpoints")}
+                          onDragEnd={handleDragEnd}
+                        >
+                          <TacticalMap
+                            checkpoints={checkpoints}
+                            selectedCheckpoint={selectedCheckpoint}
+                            onSelectCheckpoint={setSelectedCheckpoint}
+                          />
+                        </AeroWindow>
+                      </div>
+
+                      <div id="scanner-window" className="scroll-mt-4">
+                        <AeroWindow
+                          title="Biometric Passport Scanner - C:\Biometrics"
+                          path="C:\Immigration\Devices\PassportScanner"
+                          icon={<Scan className="w-4 h-4 text-emerald-600" />}
+                          statusText="APPS Device Driver v7.1 Ready"
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, "checkpoints")}
+                          onDragEnd={handleDragEnd}
+                        >
+                          <PassportScanner
+                            onScanComplete={handleScanResult}
+                            activeRedNotices={redNotices}
+                          />
+                        </AeroWindow>
+                      </div>
                     </div>
-                  </div>
-                </AeroWindow>
-              </div>
-            )}
+                  );
+                }
+
+                if (id === "chat") {
+                  return (
+                    <div 
+                      key="chat"
+                      id="chat-window" 
+                      className={`lg:col-span-4 lg:h-[480px] min-h-[420px] flex flex-col scroll-mt-4 transition-all duration-300 ${
+                        dragOverWindowId === "chat" 
+                          ? "ring-2 ring-dashed ring-amber-400 bg-amber-500/10 scale-[0.99] opacity-75 shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
+                          : ""
+                      }`}
+                      onDragOver={(e) => handleDragOver(e, "chat")}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, "chat")}
+                    >
+                      <AeroWindow
+                        title="Joint NCB Operations Chat Terminal - C:\NCB_Chat"
+                        path="C:\RTP_NCB\Communications"
+                        icon={<MessageSquare className="w-4 h-4 text-indigo-500" />}
+                        statusText="AES-256 Secure Channel"
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, "chat")}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <ImmigrationChat
+                          chatHistory={chatHistory}
+                          onSendMessage={handleSendMessage}
+                          loading={chatLoading}
+                          activeSuspect={selectedNotice}
+                        />
+                      </AeroWindow>
+                    </div>
+                  );
+                }
+
+                if (id === "logs") {
+                  return (
+                    <div 
+                      key="logs"
+                      id="logs-window" 
+                      className={`lg:col-span-8 lg:h-[480px] min-h-[280px] flex flex-col scroll-mt-4 transition-all duration-300 ${
+                        dragOverWindowId === "logs" 
+                          ? "ring-2 ring-dashed ring-amber-400 bg-amber-500/10 scale-[0.99] opacity-75 shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
+                          : ""
+                      }`}
+                      onDragOver={(e) => handleDragOver(e, "logs")}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, "logs")}
+                    >
+                      <AeroWindow
+                        title="Passenger Immigration Logs (Stream)"
+                        path="C:\Immigration\SecurityLogs"
+                        icon={<Terminal className="w-4 h-4 text-slate-700" />}
+                        statusText="Real-time Stream Active"
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, "logs")}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <LiveFeed logs={logs} />
+                      </AeroWindow>
+                    </div>
+                  );
+                }
+
+                if (id === "audit") {
+                  return (
+                    <div 
+                      key="audit"
+                      id="audit-window" 
+                      className={`col-span-12 lg:h-[620px] min-h-[450px] flex flex-col scroll-mt-4 transition-all duration-300 ${
+                        dragOverWindowId === "audit" 
+                          ? "ring-2 ring-dashed ring-amber-400 bg-amber-500/10 scale-[0.99] opacity-75 shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
+                          : ""
+                      }`}
+                      onDragOver={(e) => handleDragOver(e, "audit")}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, "audit")}
+                    >
+                      <AeroWindow
+                        title="System Compliance Audit Center"
+                        path="C:\Immigration\Audit"
+                        icon={<FileText className="w-4 h-4 text-violet-600" />}
+                        statusText="RTP Compliance Specialist Online"
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, "audit")}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <SystemAudit 
+                          logs={logs} 
+                          onAddSystemMessage={(text) => {
+                            setChatHistory((prev) => [...prev, {
+                              id: Math.random().toString(),
+                              sender: "SYSTEM",
+                              text,
+                              timestamp: new Date().toLocaleTimeString()
+                            }]);
+                          }}
+                        />
+                      </AeroWindow>
+                    </div>
+                  );
+                }
+
+                return null;
+              })}
+
+              {/* WINDOW 6: Intelligence dossier (Row span: 12, triggers on compiles) */}
+              {analysisReport && (
+                <div id="dossier-window" className="col-span-12 min-h-[450px] flex flex-col scroll-mt-4">
+                  <AeroWindow
+                    title="RTP Joint Intelligence Advisory Dossier"
+                    path="C:\RTP_NCB\Intelligence\Dossiers"
+                    icon={<FileText className="w-4 h-4 text-rose-600" />}
+                    statusText="Classified Law Enforcement Document"
+                    onClose={() => setAnalysisReport(null)}
+                  >
+                    <div className="bg-[#f0f3f6] p-4 flex flex-col justify-between h-full font-sans text-slate-800">
+                      <div className="flex items-center justify-between border-b border-[#d2d2d2] pb-2.5 mb-3">
+                        <div className="flex items-center gap-1.5">
+                          <FileText className="w-4 h-4 text-rose-600 animate-pulse" />
+                          <div>
+                            <h3 className="font-sans text-xs font-bold text-sky-950 uppercase">
+                              JOINT COUNTER-MEASURES ADVISORY DOSSIER
+                            </h3>
+                            <p className="text-[10px] font-mono text-slate-400 font-bold uppercase">
+                              SOURCE COGNITION CORE: <span className="text-sky-700 font-bold">{analysisSource || "Gemini Intel Core"}</span>
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setAnalysisReport(null)}
+                          className="win7-btn text-[10px] px-2.5 py-1 font-sans font-bold cursor-pointer"
+                        >
+                          Close Dossier
+                        </button>
+                      </div>
+
+                      <div className="bg-white border border-[#c8cbd1] rounded-sm p-4 text-xs font-mono leading-relaxed text-slate-700 max-h-[350px] overflow-y-auto shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)] whitespace-pre-wrap">
+                        {analysisReport}
+                      </div>
+
+                      <div className="mt-3 text-right">
+                        <span className="text-[9px] font-mono text-slate-400 font-bold uppercase">
+                          CLASSIFIED MATERIAL • OFFICIAL USE ONLY • ROYAL THAI POLICE SPECIAL LIAISON BRANCH
+                        </span>
+                      </div>
+                    </div>
+                  </AeroWindow>
+                </div>
+              )}
+            </div>
 
           </div>
         ) : (
