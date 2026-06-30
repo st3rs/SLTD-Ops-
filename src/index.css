@@ -1,0 +1,267 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Open+Sans:wght@400;600;700;800&display=swap');
+
+@theme {
+  --font-sans: "Tahoma", "Segoe UI", "Open Sans", sans-serif;
+  --font-mono: "Consolas", "Courier New", "JetBrains Mono", monospace;
+}
+
+/* Custom Windows XP Chunky Scrollbars */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-left: 1px solid #d4d0c8;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 1px solid #ffffff;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  box-shadow: inset 1px 1px 0px #ffffff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d4d0c8;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #808080;
+  border-color: #808080;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  box-shadow: inset -1px -1px 0px #ffffff;
+}
+
+/* Windows XP Bliss Rolling Hills - Replaced with Matte Military & Interpol Tactical Grid Command Center */
+.xp-desktop-bg {
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 65%),
+    linear-gradient(rgba(18, 30, 49, 0.45) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 30, 49, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, #090e17 0%, #0c121d 100%);
+  background-size: 100% 100%, 32px 32px, 32px 32px, 100% 100%;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+/* Classic Windows XP Window - Replaced with Matte Tactical Steel Navy Military Frame Style */
+.xp-window {
+  background: #0f172a; /* Tactical slate navy border */
+  border: 3px solid #0f172a;
+  border-top-width: 3px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
+  border-radius: 4px 4px 0 0;
+}
+
+.xp-window-titlebar {
+  background: linear-gradient(to right, #0a0f1d 0%, #152238 40%, #152238 60%, #0a0f1d 100%);
+  color: #f59e0b; /* Amber digital-looking text */
+  font-family: "Tahoma", "Consolas", monospace;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  border-bottom: 1px solid #1e293b;
+}
+
+/* Window Control Buttons (Matte Tactical Military Style) */
+.xp-btn-close {
+  background: linear-gradient(to bottom, #881337 0%, #4c0519 100%);
+  border: 1px solid #31000b;
+  box-shadow: inset 1px 1px 1px rgba(255,255,255,0.15), 1px 1px 2px rgba(0,0,0,0.3);
+  color: #fca5a5;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+}
+
+.xp-btn-close:hover {
+  background: linear-gradient(to bottom, #be123c 0%, #9f1239 100%);
+  color: #ffffff;
+  border-color: #4c0519;
+}
+
+.xp-btn-close:active {
+  background: #4c0519;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6);
+}
+
+.xp-btn-min-max {
+  background: linear-gradient(to bottom, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  box-shadow: inset 1px 1px 1px rgba(255,255,255,0.1), 1px 1px 2px rgba(0,0,0,0.3);
+  color: #94a3b8;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+}
+
+.xp-btn-min-max:hover {
+  background: linear-gradient(to bottom, #334155 0%, #1e293b 100%);
+  color: #f1f5f9;
+  border-color: #475569;
+}
+
+.xp-btn-min-max:active {
+  background: #0f172a;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6);
+}
+
+/* Skeuomorphic WinXP 3D Buttons - Rebuilt for Tactical Command Center */
+.xp-btn {
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-top-color: #64748b;
+  border-left-color: #64748b;
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  border-radius: 2px;
+  color: #f1f5f9;
+  transition: none;
+  font-family: "Tahoma", sans-serif;
+  font-size: 11px;
+}
+
+.xp-btn:hover {
+  background: #334155;
+  border-color: #475569;
+  border-top-color: #94a3b8;
+  border-left-color: #94a3b8;
+}
+
+.xp-btn:active {
+  background: #0f172a;
+  border-color: #64748b;
+  border-top-color: #334155;
+  border-left-color: #334155;
+  box-shadow: inset 1px 1px 1px rgba(0,0,0,0.4);
+}
+
+.xp-btn-primary {
+  background: linear-gradient(to bottom, #14532d 0%, #166534 50%, #15803d 100%);
+  border: 1px solid #14532d;
+  box-shadow: inset 1px 1px 1px rgba(255,255,255,0.15), 1px 1px 2px rgba(0,0,0,0.3);
+  color: #f0fdf4;
+  font-weight: bold;
+}
+
+.xp-btn-primary:hover {
+  background: linear-gradient(to bottom, #166534 0%, #15803d 50%, #16a34a 100%);
+  border-color: #15803d;
+}
+
+.xp-btn-primary:active {
+  background: #14532d;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6);
+}
+
+/* WinXP Luna Taskbar - Replaced with Matte Tactical Slate Gray-Navy Taskbar */
+.xp-taskbar {
+  background: linear-gradient(to bottom, #090e18 0%, #111a2e 100%);
+  border-top: 1px solid #1e293b;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+}
+
+/* XP Start Button - Rebuilt as Matte Military/Interpol Command Key */
+.xp-start-btn {
+  background: linear-gradient(to bottom, #111e38 0%, #1d3557 50%, #0d1e38 100%);
+  border: 1px solid #1b2a47;
+  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.2), 0 1px 3px rgba(0,0,0,0.4);
+  border-radius: 0 4px 4px 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.xp-start-btn:hover {
+  background: linear-gradient(to bottom, #1d3557 0%, #2b4c7e 50%, #152c4e 100%);
+  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.3), 0 0 6px rgba(56,189,248,0.5);
+}
+
+.xp-start-btn:active {
+  background: #091224;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.7);
+}
+
+/* XP System Tray Area */
+.xp-tray {
+  background: linear-gradient(to bottom, #0a0f1d 0%, #090d16 100%);
+  border-left: 1px solid #1e293b;
+  box-shadow: inset 1px 0 2px rgba(0,0,0,0.5);
+}
+
+/* Start Menu Luna - Replaced with Tactical Start Menu */
+.xp-start-menu {
+  border: 2px solid #0f172a;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  overflow: hidden;
+}
+
+.xp-start-menu-left {
+  background: #0f172a;
+}
+
+.xp-start-menu-right {
+  background: #090d16;
+  border-left: 1px solid #1e293b;
+}
+
+/* Help Dialog Window Frame */
+.xp-help-window {
+  border: 2px solid #0f172a;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Backward-compatible Windows XP button skins for components - Rebuilt for Tactical Command Theme */
+.win7-btn {
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-top-color: #64748b;
+  border-left-color: #64748b;
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  border-radius: 2px;
+  color: #f1f5f9;
+  font-family: "Tahoma", sans-serif;
+  font-size: 11px;
+}
+
+.win7-btn:hover {
+  background: #334155;
+  border-color: #475569;
+  border-top-color: #94a3b8;
+  border-left-color: #94a3b8;
+}
+
+.win7-btn:active {
+  background: #0f172a;
+  border-color: #64748b;
+  border-top-color: #334155;
+  border-left-color: #334155;
+  box-shadow: inset 1px 1px 1px rgba(0,0,0,0.4);
+}
+
+.win7-btn-primary {
+  background: linear-gradient(to bottom, #14532d 0%, #166534 50%, #15803d 100%);
+  border: 1px solid #14532d;
+  box-shadow: inset 1px 1px 1px rgba(255,255,255,0.15), 1px 1px 2px rgba(0,0,0,0.3);
+  color: #f0fdf4;
+  font-weight: bold;
+}
+
+.win7-btn-primary:hover {
+  background: linear-gradient(to bottom, #166534 0%, #15803d 50%, #16a34a 100%);
+  border-color: #15803d;
+}
+
+.win7-btn-primary:active {
+  background: #14532d;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6);
+}
+

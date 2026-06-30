@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Interpol Thai Immigration Dashboard",
+  "description": "Secure Interpol Command Center UI demonstrating connection and case coordination with the Royal Thai Police Immigration Bureau and automated agent analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
